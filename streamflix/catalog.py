@@ -2,12 +2,12 @@
 from abc import ABC, abstractmethod
 
 
-class Video(ABC):
+class Video(ABC): #abstract base clas: defines rules for their subclasses
     """
     Subject interface. Both the real video and its proxy expose this.
     """
 
-    @abstractmethod
+    @abstractmethod    #en este caso obliga a sus subclases a implementar el metodo play
     def play(self) -> str:
         raise NotImplementedError
 
@@ -41,9 +41,13 @@ class ProxyVideo(Video):
     def __init__(self, title: str, video_path: str):
       # TODO: store title/video_path, and keep a reference to the (not yet
       # created) RealVideo, e.g. self._real_video = None
-      pass
+      self.title = title
+      self.video_path = video_path
+      self._real_video = None   
 
     def play(self) -> str:
       # TODO: create the RealVideo lazily on first play() and cache it,
       # then delegate to it on this and every subsequent call.
-      pass
+      if self._real_video is None:
+          self._real_video = RealVideo(self.title, self.video_path)
+      return self._real_video.play()
